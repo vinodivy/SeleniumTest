@@ -1,76 +1,80 @@
-package com.example.tests;
+package com.amazon.image;
 
-import java.util.regex.Pattern;
-import java.util.concurrent.TimeUnit;
-import org.junit.*;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-public class AmazonWebsiteTest {
-  private WebDriver driver;
-  private String baseUrl;
-  private boolean acceptNextAlert = true;
-  private StringBuffer verificationErrors = new StringBuffer();
+import java.util.concurrent.TimeUnit;
 
-  @Before
-  public void setUp() throws Exception {
-    driver = new FirefoxDriver();
-    baseUrl = "https://www.google.com/";
-    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-  }
+import static org.junit.Assert.fail;
 
-  @Test
-  public void testAmazonWebsite() throws Exception {
-    driver.get("https://www.amazon.com.au/");
-    driver.findElement(By.id("twotabsearchtextbox")).click();
-    driver.findElement(By.id("twotabsearchtextbox")).clear();
-    driver.findElement(By.id("twotabsearchtextbox")).sendKeys("Disney: The Lion King Classic Collection");
-    driver.findElement(By.name("site-search")).submit();
-    driver.findElement(By.xpath("//img[@alt='Disney: The Lion King Classic Collection']")).click();
-  }
+public class AmazonWebsiteTest1 {
+    private static WebDriver driver;
+    private static String baseUrl;
+    private boolean acceptNextAlert = true;
+    private StringBuffer verificationErrors = new StringBuffer();
 
-  @After
-  public void tearDown() throws Exception {
-    driver.quit();
-    String verificationErrorString = verificationErrors.toString();
-    if (!"".equals(verificationErrorString)) {
-      fail(verificationErrorString);
+    @BeforeClass
+    public static void setUp() throws Exception {
+        System.setProperty("webdriver.chrome.driver", "C://Vinod//chromedriver_86.exe");
+        driver = new ChromeDriver();
+        baseUrl = "https://www.google.com/";
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
-  }
 
-  private boolean isElementPresent(By by) {
-    try {
-      driver.findElement(by);
-      return true;
-    } catch (NoSuchElementException e) {
-      return false;
+    @Test
+    public void testAmazonWebsite() throws Exception {
+        driver.get("https://www.amazon.com.au/");
+        driver.findElement(By.id("twotabsearchtextbox")).click();
+        driver.findElement(By.id("twotabsearchtextbox")).clear();
+        driver.findElement(By.id("twotabsearchtextbox")).sendKeys("Disney: The Lion King Classic Collection");
+        driver.findElement(By.name("site-search")).submit();
+        driver.findElement(By.xpath("//img[@alt='Disney: The Lion King Classic Collection']")).click();
+        if (isElementPresent(By.id("buyNewSection"))) {
+            System.out.println(driver.findElement(By.id("buyNewSection")).getText());
+        }
     }
-  }
 
-  private boolean isAlertPresent() {
-    try {
-      driver.switchTo().alert();
-      return true;
-    } catch (NoAlertPresentException e) {
-      return false;
+    @After
+    public void tearDown() throws Exception {
+        driver.quit();
+        String verificationErrorString = verificationErrors.toString();
+        if (!"".equals(verificationErrorString)) {
+            fail(verificationErrorString);
+        }
     }
-  }
 
-  private String closeAlertAndGetItsText() {
-    try {
-      Alert alert = driver.switchTo().alert();
-      String alertText = alert.getText();
-      if (acceptNextAlert) {
-        alert.accept();
-      } else {
-        alert.dismiss();
-      }
-      return alertText;
-    } finally {
-      acceptNextAlert = true;
+    private boolean isElementPresent(By by) {
+        try {
+            return driver.findElement(by) != null;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
-  }
+
+    private boolean isAlertPresent() {
+        try {
+            driver.switchTo().alert();
+            return true;
+        } catch (NoAlertPresentException e) {
+            return false;
+        }
+    }
+
+    private String closeAlertAndGetItsText() {
+        try {
+            Alert alert = driver.switchTo().alert();
+            String alertText = alert.getText();
+            if (acceptNextAlert) {
+                alert.accept();
+            } else {
+                alert.dismiss();
+            }
+            return alertText;
+        } finally {
+            acceptNextAlert = true;
+        }
+    }
 }
